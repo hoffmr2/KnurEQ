@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2015
+Project("{EC800B5D-0B3E-6E55-2955-44F94F792599}") = "KnurEQ", "KnurEQ.vcxproj", "{DFFC57F2-2A0D-2A31-C60B-BB4148DB1B96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFFC57F2-2A0D-2A31-C60B-BB4148DB1B96}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DFFC57F2-2A0D-2A31-C60B-BB4148DB1B96}.Debug|Win32.Build.0 = Debug|Win32
+		{DFFC57F2-2A0D-2A31-C60B-BB4148DB1B96}.Release|Win32.ActiveCfg = Release|Win32
+		{DFFC57F2-2A0D-2A31-C60B-BB4148DB1B96}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
