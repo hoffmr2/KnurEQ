@@ -47,7 +47,14 @@ private:
 
     ScopedPointer<VstParameter> m_LowShelfGain;
     ScopedPointer<VstParameter> m_LowShelfFrequency;
-
+    ScopedPointer<VstParameter> m_HighShelfGain;
+    ScopedPointer<VstParameter> m_HighShelfFrequency;
+    ScopedPointer<VstParameter> m_Parametric1Gain;
+    ScopedPointer<VstParameter> m_Parametric1Frequency;
+    ScopedPointer<VstParameter> m_Parametric1Q;
+    ScopedPointer<VstParameter> m_Parametric2Gain;
+    ScopedPointer<VstParameter> m_Parametric2Frequency;
+    ScopedPointer<VstParameter> m_Parametric2Q;
 
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnurEqAudioProcessorEditor)
