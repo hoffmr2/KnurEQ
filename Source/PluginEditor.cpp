@@ -18,23 +18,10 @@ KnurEqAudioProcessorEditor::KnurEqAudioProcessorEditor (KnurEqAudioProcessor& a_
       m_Processor (a_Processor),
       m_ValueTreeState(a_ValueTreeState)
 {
-  m_LowShelfGainLAbel = new Label();
-  m_LowShelfGainLAbel->setText("LowShelf Gain dB", dontSendNotification);
-  addAndMakeVisible(m_LowShelfGainLAbel);
-  m_LowShelfGainSlider = new Slider();
-  addAndMakeVisible(m_LowShelfGainSlider);
-  m_LowShelfGainSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxLeft, true, 50,20);
-  m_LowShelfGainSlider->setSliderStyle(Slider::Rotary);
-  m_LowShelfGainAttachment = new SliderAttachment(m_ValueTreeState, "ls_gain", *m_LowShelfGainSlider);
+  // low shelf filter slider and label
+  m_LowShelfGain = new VstParameter(this, "ls_gain", "LowShelf Gain dB", m_ValueTreeState);
+  m_LowShelfFrequency = new VstParameter(this, "ls_frequency", "LowShelf Frequency dB", m_ValueTreeState);
 
-  m_LowShelfFrequencyLAbel = new Label();
-  m_LowShelfFrequencyLAbel->setText("LowShelf Frequency dB", dontSendNotification);
-  addAndMakeVisible(m_LowShelfFrequencyLAbel);
-  m_LowShelfFrequencySlider = new Slider();
-  addAndMakeVisible(m_LowShelfFrequencySlider);
-  m_LowShelfFrequencySlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxLeft, true, 50, 20);
-  m_LowShelfFrequencySlider->setSliderStyle(Slider::Rotary);
-  m_LowShelfFrequencyAttachment = new SliderAttachment(m_ValueTreeState, "ls_frequency", *m_LowShelfFrequencySlider);
     setSize (400, 300);
 }
 
@@ -59,9 +46,26 @@ void KnurEqAudioProcessorEditor::resized()
     auto labelHeight = getHeight() * 0.1;
     auto sliderWidth = getWidth() * 0.35;
     auto sliderHeight = getHeight() * 0.15;
-    m_LowShelfGainLAbel->setBounds(10, 240, labelWidth, labelHeight);
-    m_LowShelfGainSlider->setBounds(10, 262, sliderWidth, sliderHeight);
+    m_LowShelfGain->m_Label->setBounds(10, 240, labelWidth, labelHeight);
+    m_LowShelfGain->m_Slider->setBounds(10, 262, sliderWidth, sliderHeight);
 
-    m_LowShelfFrequencyLAbel->setBounds(10, 185, labelWidth, labelHeight);
-    m_LowShelfFrequencySlider->setBounds(10, 207, sliderWidth, sliderHeight);
+    m_LowShelfFrequency->m_Label->setBounds(10, 185, labelWidth, labelHeight);
+    m_LowShelfFrequency->m_Slider->setBounds(10, 207, sliderWidth, sliderHeight);
+}
+
+KnurEqAudioProcessorEditor::VstParameter::VstParameter(KnurEqAudioProcessorEditor* a_Editor,
+                                                       String a_ParameterID,
+                                                       String a_LabelText,
+                                                       AudioProcessorValueTreeState& a_ValueTreeState) {
+
+  m_Label = new Label();
+  m_Label->setText(a_LabelText, dontSendNotification);
+  a_Editor->addAndMakeVisible(m_Label);
+  m_Slider = new Slider();
+  a_Editor->addAndMakeVisible(m_Slider);
+  m_Slider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxLeft, true, 50, 20);
+  m_Slider->setSliderStyle(Slider::Rotary);
+  m_Attachment = new SliderAttachment(a_ValueTreeState, a_ParameterID, *m_Slider);
+
+
 }

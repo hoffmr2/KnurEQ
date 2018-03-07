@@ -30,16 +30,24 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
+
+    struct VstParameter {
+      
+      VstParameter(KnurEqAudioProcessorEditor* a_Editor, 
+                   String a_ParameterID, 
+                   String a_LabelText, 
+                   AudioProcessorValueTreeState& a_ValueTreeState);
+
+      ScopedPointer<Label> m_Label;
+      ScopedPointer<Slider> m_Slider;
+      ScopedPointer<SliderAttachment> m_Attachment;
+    };
     KnurEqAudioProcessor& m_Processor;
     AudioProcessorValueTreeState& m_ValueTreeState;
 
-    ScopedPointer<Label> m_LowShelfGainLAbel;
-    ScopedPointer<Slider> m_LowShelfGainSlider;
-    ScopedPointer<SliderAttachment> m_LowShelfGainAttachment;
+    ScopedPointer<VstParameter> m_LowShelfGain;
+    ScopedPointer<VstParameter> m_LowShelfFrequency;
 
-    ScopedPointer<Label> m_LowShelfFrequencyLAbel;
-    ScopedPointer<Slider> m_LowShelfFrequencySlider;
-    ScopedPointer<SliderAttachment> m_LowShelfFrequencyAttachment;
 
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnurEqAudioProcessorEditor)
