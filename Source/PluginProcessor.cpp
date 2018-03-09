@@ -279,7 +279,7 @@ void KnurEqAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 //==============================================================================
 bool KnurEqAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 AudioProcessorEditor* KnurEqAudioProcessor::createEditor()
@@ -300,6 +300,24 @@ void KnurEqAudioProcessor::setStateInformation (const void* data, int sizeInByte
   if (xmlState != nullptr)
     if (xmlState->hasTagName(m_Parameters.state.getType()))
       m_Parameters.state = ValueTree::fromXml(*xmlState);
+}
+
+float KnurEqAudioProcessor::getFilterstransmitance(double a_Frequency) const {
+
+  if((m_IIRHighShelfFilter == nullptr) ||
+     (m_IIRLowShelfFilter == nullptr) ||
+     (m_IIRParametricBandpassFilter1 == nullptr) ||
+     (m_IIRParametricBandpassFilter2 == nullptr)) {
+    
+    return 1;
+  }
+
+  auto sample = m_IIRLowShelfFilter->Spectrum(a_Frequency);
+  sample *= m_IIRHighShelfFilter->Spectrum(a_Frequency);
+  sample *= m_IIRParametricBandpassFilter1->Spectrum(a_Frequency);
+  sample *= m_IIRParametricBandpassFilter2->Spectrum(a_Frequency);
+
+  return sample;
 }
 
 //==============================================================================

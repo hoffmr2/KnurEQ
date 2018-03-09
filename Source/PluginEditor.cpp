@@ -11,11 +11,23 @@
 #include "PluginEditor.h"
 
 
+void KnurEqAudioProcessorEditor::initFrequencyAxis() {
+  m_Frequencies.clear();
+  int width = m_VisualizationArea.getWidth();
+  double segmentWidth = width / 3.0;
+
+  for (auto i = 0; i < width; ++i) {
+
+    m_Frequencies.push_back(double(pow(10, ((i) / double(segmentWidth)) + 1.3) / m_Processor.getSampleRate()));
+  }
+}
+
 //==============================================================================
 KnurEqAudioProcessorEditor::KnurEqAudioProcessorEditor (KnurEqAudioProcessor& a_Processor, AudioProcessorValueTreeState& a_ValueTreeState)
     : AudioProcessorEditor (&a_Processor), 
       m_Processor (a_Processor),
-      m_ValueTreeState(a_ValueTreeState)
+      m_ValueTreeState(a_ValueTreeState),
+      m_VisualizationArea(10, 20, 680, 150)
 {
   // low shelf filter slider and label
   m_LowShelfGain = new VstParameter(this, "ls_gain", "LowShelf Gain dB", m_ValueTreeState);
@@ -28,7 +40,10 @@ KnurEqAudioProcessorEditor::KnurEqAudioProcessorEditor (KnurEqAudioProcessor& a_
   m_Parametric2Gain = new VstParameter(this, "p2_gain", "Parametric Gain", m_ValueTreeState);
   m_Parametric2Frequency = new VstParameter(this, "p2_frequency", "Parametric Frequency", m_ValueTreeState);
   m_Parametric2Q = new VstParameter(this, "p2_q", "Parametric Q", m_ValueTreeState);
+
+    initFrequencyAxis();
     setSize (700, 300);
+    startTimer(30);
 }
 
 KnurEqAudioProcessorEditor::~KnurEqAudioProcessorEditor()
@@ -43,7 +58,9 @@ void KnurEqAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    g.drawRect(m_VisualizationArea);
+  
+    g.strokePath(m_FiltersTransmitance, PathStrokeType(3));
 }
 
 void KnurEqAudioProcessorEditor::resized()
@@ -81,6 +98,34 @@ void KnurEqAudioProcessorEditor::resized()
 
     m_Parametric2Q->m_Label->setBounds(580, 240, labelWidth, labelHeight);
     m_Parametric2Q->m_Slider->setBounds(590, 262, sliderWidth, sliderHeight);
+}
+
+void KnurEqAudioProcessorEditor::timerCallback() {
+
+  m_FiltersTransmitance.clear();
+  auto startX = m_VisualizationArea.getX();
+  auto startY = -20 * log10(m_Processor.getFilterstransmitance(m_Frequencies[0]));
+
+  const auto yMin = -24.0;
+  const auto yMax = 24.0;
+  auto range = NormalisableRange<float>(yMin, yMax);
+
+
+  startY = (startY > yMax) ? yMax : startY;
+  startY = (startY < yMin) ? yMin : startY;
+  startY = startY * m_VisualizationArea.getHeight() / (2 * yMax) + m_VisualizationArea.getCentreY();
+  m_FiltersTransmitance.startNewSubPath(startX, startY);
+
+  for(size_t point = 1; point < m_VisualizationArea.getWidth(); ++point) {
+    
+    auto x = startX + point;
+    auto y = -20 * log10(m_Processor.getFilterstransmitance(m_Frequencies[point]));
+    y = (y > yMax) ? yMax : y;
+    y = (y < yMin) ? yMin : y;
+    y = y = y * m_VisualizationArea.getHeight() / (2 * yMax) + m_VisualizationArea.getCentreY();
+    m_FiltersTransmitance.lineTo(x, y);
+  }
+  repaint();
 }
 
 KnurEqAudioProcessorEditor::VstParameter::VstParameter(KnurEqAudioProcessorEditor* a_Editor,

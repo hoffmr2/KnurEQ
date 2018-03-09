@@ -17,19 +17,23 @@ typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 //==============================================================================
 /**
 */
-class KnurEqAudioProcessorEditor  : public AudioProcessorEditor
+class KnurEqAudioProcessorEditor  : public AudioProcessorEditor,
+                                    public Timer
 {
 public:
+  
     KnurEqAudioProcessorEditor (KnurEqAudioProcessor&, AudioProcessorValueTreeState&);
     ~KnurEqAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    void timerCallback() override;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
+    void initFrequencyAxis();
 
     struct VstParameter {
       
@@ -55,6 +59,10 @@ private:
     ScopedPointer<VstParameter> m_Parametric2Gain;
     ScopedPointer<VstParameter> m_Parametric2Frequency;
     ScopedPointer<VstParameter> m_Parametric2Q;
+
+    std::vector<float> m_Frequencies;
+    Rectangle<int> m_VisualizationArea;
+    Path m_FiltersTransmitance;
 
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnurEqAudioProcessorEditor)

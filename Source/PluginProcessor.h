@@ -62,6 +62,8 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    float getFilterstransmitance(double a_Frequency) const;
+
 private:
 
     AudioProcessorValueTreeState m_Parameters;
